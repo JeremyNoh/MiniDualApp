@@ -13,7 +13,7 @@ function Home({ navigation }) {
   useEffect(() => {
     //   ComponentDidMount
     if (firstInApp) {
-      navigate("Game");
+      navigate("History");
       setFirstInApp(false);
     }
   });

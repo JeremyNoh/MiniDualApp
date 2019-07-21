@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  AsyncStorage,
+  TouchableOpacity
+} from "react-native";
 import { withNavigation } from "react-navigation";
 
 import CardPlayer from "../components/CardPLayer";
@@ -12,7 +20,6 @@ import {
 } from "../../utils/function";
 import { iconsElements } from "../../assets/icon";
 import * as Animatable from "react-native-animatable";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Overlay } from "react-native-elements";
 import Title from "../components/Title";
 import Container from "../components/Container";
@@ -57,6 +64,9 @@ export function Game({ navigation }) {
   // for settup ComponentDidMount()
   const [firstInApp, setFirstInApp] = useState(true);
 
+  // InfoUser Storage
+  const [infoUser, setInfoUser] = useState(undefined);
+
   // Tab of Elements
   const [elements, setElements] = useState(shuffle(els));
 
@@ -84,6 +94,7 @@ export function Game({ navigation }) {
     if (firstInApp) {
       // random elements in array
       // randomEnemy()
+      getInfo();
       setFirstInApp(false);
     }
 
@@ -93,19 +104,46 @@ export function Game({ navigation }) {
     return () => clearInterval(interval);
   });
 
+  const getInfo = async () => {
+    const infoUserJson = await AsyncStorage.getItem("infoUser");
+    let infoUser = JSON.parse(infoUserJson);
+    setInfoUser(infoUser);
+  };
+
   attaqueEnemy = element => {
     if (element === RandomElement) {
       setEnemyInfo({ ...EnemyInfo, life: EnemyInfo.life - 0.1 });
       if (EnemyInfo.life <= 0) {
+        _saveParty(true);
         setGameWin(true);
       }
     } else {
       setPlayerInfo({ ...PlayerInfo, life: PlayerInfo.life - 0.1 });
       if (PlayerInfo.life <= 0) {
+        _saveParty(false);
         setGameLost(true);
       }
     }
     setRandomElement(RandomElementInArray(els));
+  };
+
+  _saveParty = async isWin => {
+    let infoUserStorage;
+    if (infoUser === null) {
+      infoUserStorage = { party: [] };
+    } else {
+      infoUserStorage = infoUser;
+    }
+
+    infoUserStorage.party = [
+      ...infoUserStorage.party,
+      {
+        url_photo: `https://avatars.dicebear.com/v2/bottts/${randomInt +
+          2}.svg?options[topChange]=0`,
+        party: isWin ? "Gagnée" : "Perdu"
+      }
+    ];
+    await AsyncStorage.setItem("infoUser", JSON.stringify(infoUserStorage));
   };
 
   gameLostView = () => {
