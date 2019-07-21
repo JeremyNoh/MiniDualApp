@@ -360,10 +360,14 @@ const styles = StyleSheet.create({
   }
 });
 
-Game.navigationOptions = () => ({
+Game.navigationOptions = ({ navigation }) => ({
   title: "Fight",
   // headerLeft: null,
-  // headerLeft: <Text> ajjdajzdja</Text>,
+  headerLeft: (
+    <TouchableOpacity onPress={() => navigation.pop()}>
+      <Text> Home</Text>
+    </TouchableOpacity>
+  ),
   titleStyle: {
     textAlign: "center"
   },
