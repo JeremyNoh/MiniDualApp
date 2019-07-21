@@ -92,7 +92,7 @@ function History({ navigation }) {
                   key={index}
                   style={{
                     backgroundColor:
-                      element.party === "Gagnée" ? "green" : "red",
+                      element.party === "Gagnée" ? "#04A777" : "#E35459",
                     borderColor: "black",
                     borderWidth: 1,
                     margin: 10,

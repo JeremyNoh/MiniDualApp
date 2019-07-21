@@ -37,7 +37,11 @@ export const CardPlayer = ({ image, name, life }) => {
       >
         {name}
       </Text>
-      <Progress.Bar color="black" progress={life} width={100} />
+      <Progress.Bar
+        color={life >= 0.6 ? "green" : life >= 0.3 ? "orange" : "red"}
+        progress={life}
+        width={100}
+      />
     </View>
   );
 };

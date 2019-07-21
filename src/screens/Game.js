@@ -23,6 +23,7 @@ import * as Animatable from "react-native-animatable";
 import { Button, Overlay } from "react-native-elements";
 import Title from "../components/Title";
 import Container from "../components/Container";
+import Toast, { DURATION } from "react-native-easy-toast";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
@@ -44,6 +45,9 @@ const infoHelp = [
   "la terre est efficace face au feu."
 ];
 
+// DEE7ED
+const headerColor = "#27C1D9";
+const PlayContentColor = "#27C1D9";
 export const BonusElement = (elementChoice, baseElement) => {
   // null  === the same Element
   // false === perds contre l'element
@@ -94,6 +98,8 @@ export function Game({ navigation }) {
     if (firstInApp) {
       // random elements in array
       // randomEnemy()
+      // refs.toast.show("hello world!");
+
       getInfo();
       setFirstInApp(false);
     }
@@ -102,6 +108,7 @@ export function Game({ navigation }) {
       setRandomElement(RandomElementInArray(els));
 
       setElements(shuffle(elements));
+      // iconRef.flipInY(900);
     }, 1000);
     return () => clearInterval(interval);
   });
@@ -114,12 +121,16 @@ export function Game({ navigation }) {
 
   attaqueEnemy = element => {
     if (element === RandomElement) {
+      enemyRef.wobble(800);
+
       setEnemyInfo({ ...EnemyInfo, life: EnemyInfo.life - 0.1 });
       if (EnemyInfo.life <= 0) {
         _saveParty(true);
         setGameWin(true);
       }
     } else {
+      playerRef.wobble(800);
+
       setPlayerInfo({ ...PlayerInfo, life: PlayerInfo.life - 0.1 });
       if (PlayerInfo.life <= 0) {
         _saveParty(false);
@@ -155,7 +166,7 @@ export function Game({ navigation }) {
         isVisible={GameLost}
         overlayBackgroundColor="white"
         overlayStyle={{}}
-        onBackdropPress={() => this.props.navigation.navigate("Home")}
+        onBackdropPress={() => navigation.navigate("Home")}
       >
         <Container>
           <Title
@@ -188,7 +199,7 @@ export function Game({ navigation }) {
         isVisible={GameWin}
         overlayBackgroundColor="white"
         overlayStyle={{}}
-        onBackdropPress={() => this.props.navigation.navigate("Home")}
+        onBackdropPress={() => navigation.navigate("Home")}
       >
         <Container>
           <Title
@@ -223,7 +234,7 @@ export function Game({ navigation }) {
       <View
         style={{
           height: deviceHeight * 0.4,
-          backgroundColor: "#E35459",
+          backgroundColor: PlayContentColor,
           flex: 1,
           flexDirection: "row",
           alignItems: "center",
@@ -231,11 +242,20 @@ export function Game({ navigation }) {
           paddingHorizontal: 20
         }}
       >
-        <CardPlayer
-          image={`https://avatars.dicebear.com/v2/bottts/${randomInt}.svg?options[topChange]=0`}
-          name="DjeBlack"
-          life={PlayerInfo.life}
-        />
+        <Animatable.View
+          animation={"bounceInLeft"}
+          duration={2000}
+          ref={ref => {
+            playerRef = ref;
+          }}
+        >
+          <CardPlayer
+            image={`https://avatars.dicebear.com/v2/bottts/${randomInt}.svg?options[topChange]=0`}
+            name="You"
+            life={PlayerInfo.life}
+          />
+        </Animatable.View>
+
         <Image
           style={{
             width: 30,
@@ -243,30 +263,47 @@ export function Game({ navigation }) {
           }}
           source={require("../../assets/battle.png")}
         />
-        <CardPlayer
-          image={`https://avatars.dicebear.com/v2/bottts/${randomInt +
-            2}.svg?options[topChange]=0`}
-          name="Monster"
-          life={EnemyInfo.life}
-        />
+
+        <Animatable.View
+          animation={"bounceInRight"}
+          duration={2000}
+          ref={ref => {
+            enemyRef = ref;
+          }}
+        >
+          <CardPlayer
+            image={`https://avatars.dicebear.com/v2/bottts/${randomInt +
+              2}.svg?options[topChange]=0`}
+            name="Monster"
+            life={EnemyInfo.life}
+          />
+        </Animatable.View>
       </View>
       <View style={{ height: deviceHeight * 0.6 }}>
         <View style={styles.profileDetail}>
-          <Image
-            source={iconsElements[RandomElement]}
-            style={{
-              width: 100,
-              height: 100,
-              borderWidth: 1,
-              borderRadius: 50,
-              paddingBottom: 20,
-              padding: 10,
-              borderColor: "black",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "white"
+          <Animatable.View
+            animation={"zoomIn"}
+            duration={1000}
+            ref={ref => {
+              iconRef = ref;
             }}
-          />
+          >
+            <Image
+              source={iconsElements[RandomElement]}
+              style={{
+                width: 100,
+                height: 100,
+                borderWidth: 1,
+                borderRadius: 50,
+                paddingBottom: 20,
+                padding: 10,
+                borderColor: "black",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "white"
+              }}
+            />
+          </Animatable.View>
         </View>
         <View
           style={{
@@ -302,38 +339,6 @@ export function Game({ navigation }) {
             );
           })}
         </View>
-        {/* <Animatable.View
-          animation={"fadeInUpBig"}
-          iterationCount="infinite"
-          direction="alternate"
-          duration={5000}
-          iterationDelay={3000}
-          style={{
-            position: "absolute",
-            bottom: 150,
-            backgroundColor: "grey",
-            width: deviceWidth - 50,
-            height: 40,
-            borderColor: "black",
-            borderWidth: 1,
-            borderRadius: 10,
-            marginLeft: 25,
-            marginRight: "auto"
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <Text style={{ fontSize: 15, fontWeight: "bold", color: "white" }}>
-              {infoHelp[0]}
-            </Text>
-          </View>
-        </Animatable.View>*/}
       </View>
     </View>
   );
@@ -358,12 +363,13 @@ const styles = StyleSheet.create({
 Game.navigationOptions = () => ({
   title: "Fight",
   // headerLeft: null,
+  // headerLeft: <Text> ajjdajzdja</Text>,
   titleStyle: {
     textAlign: "center"
   },
   headerStyle: {
     textAlign: "center",
-    backgroundColor: "#E35459"
+    backgroundColor: headerColor
   }
 });
 
