@@ -100,7 +100,9 @@ export function Game({ navigation }) {
 
     const interval = setInterval(() => {
       setRandomElement(RandomElementInArray(els));
-    }, 2000);
+
+      setElements(shuffle(elements));
+    }, 1000);
     return () => clearInterval(interval);
   });
 
@@ -125,6 +127,7 @@ export function Game({ navigation }) {
       }
     }
     setRandomElement(RandomElementInArray(els));
+    setElements(shuffle(elements));
   };
 
   _saveParty = async isWin => {

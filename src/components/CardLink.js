@@ -4,7 +4,10 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export const CardLink = props => {
   return (
-    <TouchableOpacity style={styles.container} onPress={props.onPress}>
+    <TouchableOpacity
+      style={[styles.container, props.style]}
+      onPress={props.onPress}
+    >
       <Text style={styles.text}>{props.title}</Text>
     </TouchableOpacity>
   );
@@ -15,9 +18,11 @@ const styles = StyleSheet.create({
     borderColor: "blue",
     borderWidth: 1,
     borderRadius: 10,
-    width: 250,
+    width: 350,
     alignItems: "center",
-    marginBottom: 30
+    justifyContent: "center",
+    marginBottom: 30,
+    height: 70
   },
   text: {
     fontSize: 20,

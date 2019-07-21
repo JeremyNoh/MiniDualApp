@@ -16,8 +16,9 @@ import Image from "react-native-remote-svg";
 import Title from "../components/Title";
 import Container from "../components/Container";
 import { Loading } from "../components/Loading";
+import { withNavigation } from "react-navigation";
 
-export default function History() {
+function History({ navigation }) {
   // for settup ComponentDidMount()
   const [firstInApp, setFirstInApp] = useState(true);
 
@@ -119,6 +120,16 @@ export default function History() {
     </ImageBackground>
   );
 }
+
+History.navigationOptions = () => ({
+  headerTintColor: "black",
+  title: "Historiques des Parties",
+  headerStyle: {
+    backgroundColor: "#E35459"
+  }
+});
+
+export default withNavigation(History);
 
 const styles = StyleSheet.create({
   container: {

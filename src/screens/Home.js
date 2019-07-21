@@ -13,7 +13,7 @@ function Home({ navigation }) {
   useEffect(() => {
     //   ComponentDidMount
     if (firstInApp) {
-      navigate("History");
+      // navigate("Game");
       setFirstInApp(false);
     }
   });
@@ -39,11 +39,20 @@ function Home({ navigation }) {
   return (
     <Container>
       <Title title="Fais ton Choix" style={{ marginBottom: 30 }} />
-      <CardLink title="Jouer" onPress={() => navigate("Game")} />
-      <CardLink title="Comment Jouer | Règles" onPress={info} />
+      <CardLink
+        title="Jouer"
+        onPress={() => navigate("Game")}
+        style={{ backgroundColor: "#0496FF" }}
+      />
+      <CardLink
+        title="Comment Jouer | Règles"
+        onPress={info}
+        style={{ backgroundColor: "#04A777" }}
+      />
       <CardLink
         title="Historique des Parties"
         onPress={() => navigate("History")}
+        style={{ backgroundColor: "#820263" }}
       />
     </Container>
   );
@@ -62,7 +71,7 @@ Home.navigationOptions = () => ({
   headerTintColor: "black",
   title: "Bienvenu sur l'app",
   headerStyle: {
-    backgroundColor: "blue"
+    backgroundColor: "#E35459"
   }
 });
 
