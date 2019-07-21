@@ -83,17 +83,15 @@ export function Game({ navigation }) {
 
     if (firstInApp) {
       // random elements in array
-      // randomEnemy();
+      // randomEnemy()
       setFirstInApp(false);
     }
-  });
 
-  // randomEnemy = () => {
-  //   let EnemyInfo = {
-  //     life: 1
-  //   };
-  //   setEnemyInfo(EnemyInfo);
-  // };
+    const interval = setInterval(() => {
+      setRandomElement(RandomElementInArray(els));
+    }, 2000);
+    return () => clearInterval(interval);
+  });
 
   attaqueEnemy = element => {
     if (element === RandomElement) {
